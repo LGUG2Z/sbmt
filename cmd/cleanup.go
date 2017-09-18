@@ -13,8 +13,8 @@ import (
 
 var cleanupCmd = &cobra.Command{
 	Use:   "cleanup",
-	Short: "A brief description of your command",
-	Long:  ``,
+	Short: "Clean up encrypted files deleted from a UnionFS mount on Google Drive",
+	Long:  CleanupLong,
 	Run: func(cmd *cobra.Command, args []string) {
 		fs := afero.NewOsFs()
 

@@ -10,7 +10,7 @@ import (
 // mountCmd represents the mount command
 var mountCmd = &cobra.Command{
 	Use:   "mount",
-	Short: "A brief description of your command",
+	Short: "Set up and ensure integrity of Plexdrive, Rclone and UnionFS mounts",
 	Long:  MountLong,
 	Run: func(cmd *cobra.Command, args []string) {
 		paths := Paths{

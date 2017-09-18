@@ -36,6 +36,19 @@ sbmt mount \
 	--local-folder /local \
 	--union-folder /union
 `
-	CleanupLong = ``
-	UploadLong  = ``
+	CleanupLong = `Cleans up files that have been deleted on a UnionFS mount on an encrypted GDrive remote.
+
+Files deleted from read-only section of a UnionFS mount are not actually deleted but
+rather hidden from view. A record of these hidden files is kept in a hidden subfolder of
+the unionfs mount location (.unionfs). The cleanup command will iterate through all the
+files of this hidden subfolder, find the corresponding files in the location identified
+using the --decrypt-folder flag and remove them from Google Drive.
+
+Example:
+
+sbmt cleanup \
+	--decrypt-folder /decrypt \
+	--union-folder /union
+`
+	UploadLong = ``
 )
