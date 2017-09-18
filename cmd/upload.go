@@ -55,7 +55,7 @@ func Upload(fs afero.Fs, r RcloneDispatcher, f Flags) error {
 		return err
 	}
 
-	uploadMappings := GetUploadMappings(localFiles, f.LocalFolder, f.RemoteMount)
+	uploadMappings := GetUploadMappings(localFiles, f.LocalFolder, f.EncryptRemote)
 
 	for _, m := range uploadMappings {
 		output, err := r.MoveTo(m.Source, m.Destination)
@@ -87,5 +87,5 @@ func init() {
 	RootCmd.AddCommand(uploadCmd)
 
 	uploadCmd.Flags().StringVarP(&uploadFlags.LocalFolder, "local-folder", "l", "", "location of the local (rw) folder")
-	uploadCmd.Flags().StringVarP(&uploadFlags.RemoteMount, "remote-mount", "r", "", "name of the remote mount to upload to (with ':')")
+	uploadCmd.Flags().StringVarP(&uploadFlags.EncryptRemote, "encrypt-remote", "r", "", "name of the remote mount to upload to (with ':')")
 }

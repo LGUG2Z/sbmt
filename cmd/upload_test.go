@@ -15,7 +15,7 @@ var _ = Describe("Upload", func() {
 	f := Flags{
 		LocalFolder:   "/local",
 		DecryptFolder: "/decrypt",
-		RemoteMount:   "remote:",
+		EncryptRemote: "remote:",
 	}
 	r := MockRclone{Fs: fs}
 
@@ -32,7 +32,7 @@ var _ = Describe("Upload", func() {
 			file := "/local/a.txt"
 
 			expected := []LocalRemoteMapping{LocalRemoteMapping{Source: file, Destination: "remote:/a.txt"}}
-			actual := GetUploadMappings([]string{file}, f.LocalFolder, f.RemoteMount)
+			actual := GetUploadMappings([]string{file}, f.LocalFolder, f.EncryptRemote)
 			Expect(expected).To(Equal(actual))
 		})
 
@@ -40,7 +40,7 @@ var _ = Describe("Upload", func() {
 			file := "/local/x/y/z/a.txt"
 
 			expected := []LocalRemoteMapping{LocalRemoteMapping{Source: file, Destination: "remote:/x/y/z/a.txt"}}
-			actual := GetUploadMappings([]string{file}, f.LocalFolder, f.RemoteMount)
+			actual := GetUploadMappings([]string{file}, f.LocalFolder, f.EncryptRemote)
 			Expect(expected).To(Equal(actual))
 		})
 

@@ -10,11 +10,11 @@ import (
 )
 
 type Flags struct {
-	LocalFolder     string
 	DecryptFolder   string
-	DecryptMount    string
+	DecryptRemote   string
+	EncryptRemote   string
+	LocalFolder     string
 	PlexDriveFolder string
-	RemoteMount     string
 	UnionFolder     string
 }
 

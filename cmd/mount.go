@@ -11,11 +11,11 @@ import (
 var mountCmd = &cobra.Command{
 	Use:   "mount",
 	Short: "A brief description of your command",
-	Long:  ``,
+	Long:  MountLong,
 	Run: func(cmd *cobra.Command, args []string) {
 		paths := Paths{
 			Decrypt:   mountFlags.DecryptFolder,
-			Mount:     mountFlags.DecryptMount,
+			Mount:     mountFlags.DecryptRemote,
 			Local:     mountFlags.LocalFolder,
 			PlexDrive: mountFlags.PlexDriveFolder,
 			Union:     mountFlags.UnionFolder,
@@ -103,5 +103,5 @@ func init() {
 	mountCmd.Flags().StringVarP(&mountFlags.PlexDriveFolder, "plexdrive-folder", "p", "", "location of the plexdrive folder")
 	mountCmd.Flags().StringVarP(&mountFlags.LocalFolder, "local-folder", "l", "", "location of the local folder (union read-write)")
 	mountCmd.Flags().StringVarP(&mountFlags.DecryptFolder, "decrypt-folder", "d", "", "location of the decrypted plexdrive folder (union read-only)")
-	mountCmd.Flags().StringVarP(&mountFlags.DecryptMount, "decrypt-mount", "m", "", "name of the mount to use to decrypt data from plexdrive")
+	mountCmd.Flags().StringVarP(&mountFlags.DecryptRemote, "decrypt-remote", "m", "", "name of the remote to use to decrypt data from plexdrive (with trailing :)")
 }
