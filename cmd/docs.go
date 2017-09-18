@@ -50,5 +50,20 @@ sbmt cleanup \
 	--decrypt-folder /decrypt \
 	--union-folder /union
 `
-	UploadLong = ``
+	UploadLong = `Uploads any newly created files to an encrypted Rclone remote.
+
+Files created in the read-write section of a UnionFS mount will be iterated over,
+encrypted, and uploaded to the Rclone remote specified using the --encrypt-remote
+flag.
+
+The upload command uses the rclone 'moveto' command, which ensures that the file
+to be uploaded will automatically be removed from the local read-write folder as
+soon as the upload is confirmed as having been successful.
+
+Example:
+
+sbmt upload \
+	--local-folder /local \
+	--encrypt-remote encrypted-remote:
+`
 )

@@ -14,8 +14,8 @@ import (
 // uploadCmd represents the upload command
 var uploadCmd = &cobra.Command{
 	Use:   "upload",
-	Short: "A brief description of your command",
-	Long:  ``,
+	Short: "Upload newly created files to an encrypted Rclone remote",
+	Long:  UploadLong,
 	Run: func(cmd *cobra.Command, args []string) {
 		var fs afero.Fs = afero.NewOsFs()
 		var r Rclone
