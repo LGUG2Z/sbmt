@@ -1,6 +1,10 @@
 package cmd
 
 const (
+	RootLong = `The Seedbox Mount Tool (sbmt) is a single binary intended to help ensure the integrity
+of Plexdrive, Rclone and UnionFS mounts on a seedbox and synchronise data between
+local and cloud storage.`
+
 	MountLong = `Mounts encrypted files stored on Google Drive using Plexdrive, Rclone and UnionFS.
 
 The encrypted remote files on Google Drive are mounted by Plexdrive in the folder
