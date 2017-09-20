@@ -14,6 +14,7 @@ import (
 )
 
 func UnionFsDelete(fs afero.Fs, unionPath, deletionPath string) error {
+
 	relativePath := strings.TrimPrefix(deletionPath, unionPath)
 	hiddenFilePath := fmt.Sprintf("%s/%s%s%s", unionPath, ".unionfs", relativePath, SuffixUnionFSHidden)
 	normalFolderPath := fmt.Sprintf("%s/%s%s", unionPath, ".unionfs", relativePath)
@@ -169,7 +170,7 @@ var _ = Describe("Cleanup", func() {
 			Expect(exists).To(BeFalse())
 		})
 
-		It("Cleanup should not affect files having had an attempted deletion by UnionFS", func() {
+		It("Cleanup should not affect files not having had an attempted deletion by UnionFS", func() {
 			_, err := fs.Create("/union/a")
 			Expect(err).ToNot(HaveOccurred())
 			_, err = fs.Create("/mount/a")
@@ -208,42 +209,42 @@ var _ = Describe("Cleanup", func() {
 			Expect(exists).To(BeFalse())
 		})
 
-		//Describe("When a hidden folder becomes empty after a cleanup", func() {
-		//	It("Should deleted at the end of the cleanup operation", func() {
-		//		_, err := fs.Create("/union/sub/a")
-		//		Expect(err).ToNot(HaveOccurred())
-		//		_, err = fs.Create("/mount/sub/a")
-		//		Expect(err).ToNot(HaveOccurred())
-		//
-		//		Expect(UnionFsDelete(fs, f.UnionFolder, "/union/sub/a")).To(Succeed())
-		//
-		//		_ = captureStdout(func() {
-		//			Expect(Cleanup(fs, f)).To(Succeed())
-		//		})
-		//
-		//		exists, err := afero.Exists(fs, "/union/.unionfs/sub")
-		//		Expect(err).ToNot(HaveOccurred())
-		//		Expect(exists).To(BeFalse())
-		//	})
-		//})
+		Describe("When a hidden folder becomes empty after a cleanup", func() {
+			It("Should deleted at the end of the cleanup operation", func() {
+				_, err := fs.Create("/union/sub/a")
+				Expect(err).ToNot(HaveOccurred())
+				_, err = fs.Create("/mount/sub/a")
+				Expect(err).ToNot(HaveOccurred())
 
-		//Describe("When the .unionfs folder is empty at the end of a cleanup", func() {
-		//	It("Should be deleted", func() {
-		//		_, err := fs.Create("/union/sub/a")
-		//		Expect(err).ToNot(HaveOccurred())
-		//		_, err = fs.Create("/mount/sub/a")
-		//		Expect(err).ToNot(HaveOccurred())
-		//
-		//		Expect(UnionFsDelete(fs, f.UnionFolder, "/union/sub/a")).To(Succeed())
-		//
-		//		_ = captureStdout(func() {
-		//			Expect(Cleanup(fs, f)).To(Succeed())
-		//		})
-		//
-		//		exists, err := afero.Exists(fs, "/union/.unionfs")
-		//		Expect(err).ToNot(HaveOccurred())
-		//		Expect(exists).To(BeFalse())
-		//	})
-		//})
+				Expect(UnionFsDelete(fs, f.UnionFolder, "/union/sub/a")).To(Succeed())
+
+				_ = captureStdout(func() {
+					Expect(Cleanup(fs, f)).To(Succeed())
+				})
+
+				exists, err := afero.Exists(fs, "/union/.unionfs/sub")
+				Expect(err).ToNot(HaveOccurred())
+				Expect(exists).To(BeFalse())
+			})
+		})
+
+		Describe("When the .unionfs folder is empty at the end of a cleanup", func() {
+			It("Should be deleted", func() {
+				_, err := fs.Create("/union/sub/a")
+				Expect(err).ToNot(HaveOccurred())
+				_, err = fs.Create("/mount/sub/a")
+				Expect(err).ToNot(HaveOccurred())
+
+				Expect(UnionFsDelete(fs, f.UnionFolder, "/union/sub/a")).To(Succeed())
+
+				_ = captureStdout(func() {
+					Expect(Cleanup(fs, f)).To(Succeed())
+				})
+
+				exists, err := afero.Exists(fs, "/union/.unionfs")
+				Expect(err).ToNot(HaveOccurred())
+				Expect(exists).To(BeFalse())
+			})
+		})
 	})
 })

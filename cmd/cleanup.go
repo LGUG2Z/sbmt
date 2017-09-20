@@ -63,25 +63,25 @@ func Cleanup(fs afero.Fs, f Flags) error {
 		fmt.Printf("%s cleaned up.\n", d)
 	}
 
-	//emptyFolderPaths, err := getEmptyHiddenFolders(fs, unionDeletionsFolder)
-	//if err != nil {
-	//	return err
-	//}
-	//
-	//for _, d := range emptyFolderPaths {
-	//	if err := cleanup(fs, d); err != nil {
-	//		return err
-	//	}
-	//	fmt.Printf("%s cleaned up.\n", d)
-	//}
-	//
-	//isEmpty, err := afero.IsEmpty(fs, unionDeletionsFolder)
-	//if err != nil {
-	//}
-	//
-	//if isEmpty {
-	//	fs.Remove(unionDeletionsFolder)
-	//}
+	emptyFolderPaths, err := getEmptyHiddenFolders(fs, unionDeletionsFolder)
+	if err != nil {
+		return err
+	}
+
+	for _, d := range emptyFolderPaths {
+		if err := cleanup(fs, d); err != nil {
+			return err
+		}
+		fmt.Printf("%s cleaned up.\n", d)
+	}
+
+	isEmpty, err := afero.IsEmpty(fs, unionDeletionsFolder)
+	if err != nil {
+	}
+
+	if isEmpty {
+		fs.Remove(unionDeletionsFolder)
+	}
 
 	return nil
 }
