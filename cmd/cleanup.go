@@ -15,7 +15,13 @@ var cleanupCmd = &cobra.Command{
 	Use:   "cleanup",
 	Short: "Clean up encrypted files deleted from a UnionFS mount on Google Drive",
 	Long:  CleanupLong,
+	Args:  cobra.NoArgs,
 	Run: func(cmd *cobra.Command, args []string) {
+		if !hasRequiredFlags(cmd, mountFlags) {
+			fmt.Println(ErrMissingRequiredFlags)
+			os.Exit(1)
+		}
+
 		fs := afero.NewOsFs()
 
 		if err := Cleanup(fs, cleanupFlags); err != nil {
@@ -162,6 +168,6 @@ var cleanupFlags Flags
 
 func init() {
 	RootCmd.AddCommand(cleanupCmd)
-	cleanupCmd.Flags().StringVarP(&cleanupFlags.UnionFolder, "union-folder", "u", "", "location of the unionfs folder")
-	cleanupCmd.Flags().StringVarP(&cleanupFlags.DecryptFolder, "decrypt-folder", "d", "", "location of the decrypted plexdrive folder")
+	cleanupCmd.Flags().StringVar(&cleanupFlags.UnionFolder, "union", "", "location of the unionfs folder")
+	cleanupCmd.Flags().StringVar(&cleanupFlags.DecryptFolder, "decrypt", "", "location of the decrypted data folder")
 }

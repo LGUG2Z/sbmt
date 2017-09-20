@@ -12,7 +12,13 @@ var mountCmd = &cobra.Command{
 	Use:   "mount",
 	Short: "Set up and ensure integrity of Plexdrive, Rclone and UnionFS mounts",
 	Long:  MountLong,
+	Args:  cobra.NoArgs,
 	Run: func(cmd *cobra.Command, args []string) {
+		if !hasRequiredFlags(cmd, mountFlags) {
+			fmt.Println(ErrMissingRequiredFlags)
+			os.Exit(1)
+		}
+
 		paths := Paths{
 			Decrypt:   mountFlags.DecryptFolder,
 			Mount:     mountFlags.DecryptRemote,
@@ -99,9 +105,9 @@ var mountFlags Flags
 
 func init() {
 	RootCmd.AddCommand(mountCmd)
-	mountCmd.Flags().StringVarP(&mountFlags.UnionFolder, "union-folder", "u", "", "location of the unionfs folder")
-	mountCmd.Flags().StringVarP(&mountFlags.PlexDriveFolder, "plexdrive-folder", "p", "", "location of the plexdrive folder")
-	mountCmd.Flags().StringVarP(&mountFlags.LocalFolder, "local-folder", "l", "", "location of the local folder (union read-write)")
-	mountCmd.Flags().StringVarP(&mountFlags.DecryptFolder, "decrypt-folder", "d", "", "location of the decrypted plexdrive folder (union read-only)")
-	mountCmd.Flags().StringVarP(&mountFlags.DecryptRemote, "decrypt-remote", "m", "", "name of the remote to use to decrypt data from plexdrive (with trailing :)")
+	mountCmd.Flags().StringVar(&mountFlags.UnionFolder, "union", "", "location of the unionfs mount folder")
+	mountCmd.Flags().StringVar(&mountFlags.PlexDriveFolder, "plexdrive", "", "location of the plexdrive mount folder")
+	mountCmd.Flags().StringVar(&mountFlags.LocalFolder, "local", "", "location of the local folder (union read-write)")
+	mountCmd.Flags().StringVar(&mountFlags.DecryptFolder, "decrypt", "", "location of the decrypted plexdrive folder (union read-only)")
+	mountCmd.Flags().StringVar(&mountFlags.DecryptRemote, "decrypt-remote", "", "name of the remote to use to decrypt data from plexdrive (with ':' suffix)")
 }

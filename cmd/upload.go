@@ -15,8 +15,14 @@ import (
 var uploadCmd = &cobra.Command{
 	Use:   "upload",
 	Short: "Upload newly created files to an encrypted Rclone Google Drive remote",
+	Args:  cobra.NoArgs,
 	Long:  UploadLong,
 	Run: func(cmd *cobra.Command, args []string) {
+		if !hasRequiredFlags(cmd, mountFlags) {
+			fmt.Println(ErrMissingRequiredFlags)
+			os.Exit(1)
+		}
+
 		var fs afero.Fs = afero.NewOsFs()
 		var r Rclone
 
@@ -86,6 +92,6 @@ var uploadFlags Flags
 func init() {
 	RootCmd.AddCommand(uploadCmd)
 
-	uploadCmd.Flags().StringVarP(&uploadFlags.LocalFolder, "local-folder", "l", "", "location of the local (rw) folder")
-	uploadCmd.Flags().StringVarP(&uploadFlags.EncryptRemote, "encrypt-remote", "r", "", "name of the remote mount to upload to (with ':')")
+	uploadCmd.Flags().StringVar(&uploadFlags.LocalFolder, "local", "", "location of the local folder to upload from")
+	uploadCmd.Flags().StringVar(&uploadFlags.EncryptRemote, "encrypt-remote", "", "name of the remote mount to upload to (with ':' suffix)")
 }

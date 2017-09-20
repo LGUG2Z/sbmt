@@ -54,13 +54,13 @@ The three commands of `sbmt` are `mount`, `upload` and `cleanup`.
 ### mount
 
 The encrypted remote files on Google Drive are mounted by Plexdrive in the folder
-specified using the `--plexdrive-folder` flag. A local Rclone mount then reads the
+specified using the `--plexdrive` flag. A local Rclone mount then reads the
 encrypted files in the plexdrive folder and shows their unencrypted representation
-in the folder specified using the `--decrypt-folder` flag. A UnionFS mount is then
-created at the location specified by the `--union-folder` flag, which shows a unified
+in the folder specified using the `--decrypt` flag. A UnionFS mount is then
+created at the location specified by the `--union` flag, which shows a unified
 representation of all of the files stored in Google Drive (in their unencrypted
-form, in the `--decrypt-folder` location), and files that have been downloaded to
-the local machine, in a folder specified using the `--local-folder` flag.
+form, in the `--decrypt` location), and files that have been downloaded to
+the local machine, in a folder specified using the `--local` flag.
 
 The flow of data is as follows:
 
@@ -81,11 +81,11 @@ Example:
 
 ```bash
 sbmt mount \
-    --plexdrive-folder /plexdrive \
-    --decrypt-remote plexdrive-decrypted: \
-    --decrypt-folder /decrypt \
-    --local-folder /local \
-    --union-folder /union
+    --plexdrive /plexdrive \
+    --decrypt-remote plexdrive-decryptor: \
+    --decrypt /decrypt \
+    --local /local \
+    --union /union
 ```
 
 ### cleanup
@@ -94,13 +94,11 @@ Files deleted from read-only section of a UnionFS mount are not actually deleted
 rather hidden from view. A record of these hidden files is kept in a hidden subfolder of
 the unionfs mount location (.unionfs). The cleanup command will iterate through all the
 files of this hidden subfolder, find the corresponding files in the location identified
-using the `--decrypt-folder` flag and remove them from Google Drive.
+using the `--decrypt` flag and remove them from Google Drive.
 
 Example:
 ```bash
-sbmt cleanup \
-    --decrypt-folder /decrypt \
-    --union-folder /union
+sbmt cleanup --decrypt /decrypt --union /union
 ```
 
 ### upload
@@ -116,7 +114,5 @@ soon as the upload is confirmed as having been successful.
 Example:
 
 ```bash
-sbmt upload \
-    --local-folder /local \
-    --encrypt-remote encrypted-remote:
+sbmt upload --local /local --encrypt-remote encrypted-remote:
 ```

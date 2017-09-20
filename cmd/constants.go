@@ -1,13 +1,16 @@
 package cmd
 
-import "fmt"
+import (
+	"errors"
+	"fmt"
+)
 
 const SuffixUnionFSHidden = "_HIDDEN~"
 
 var (
-	ErrSbmProcessAlreadyRunning = func(pid int) error {
-		return fmt.Errorf("An sbmt process is already running with pid %v. Not continuing.", pid)
+	ErrMissingRequiredFlags      = errors.New("required flags for this command are missing")
+	ErrSbmtProcessAlreadyRunning = func(pid int) error {
+		return fmt.Errorf("an sbmt process is already running with pid %v", pid)
 	}
-	ErrFailedToMount       = func(folder string) error { return fmt.Errorf("Failed to mount %s.\n", folder) }
-	ErrCouldNotVerifyMount = func(mount string) error { return fmt.Errorf("Could not verify successful mount of %s.", mount) }
+	ErrCouldNotVerifyMount = func(mount string) error { return fmt.Errorf("could not verify successful mount of %s", mount) }
 )
