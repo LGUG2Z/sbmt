@@ -28,7 +28,7 @@ var mountCmd = &cobra.Command{
 	},
 }
 
-func Mount(rclone, unionFS, plexDrive MounterUnmounter) error {
+func Mount(rclone, unionFS, plexDrive FuseMount) error {
 	hasBrokenMounts, err := hasBrokenMounts(unionFS, rclone, plexDrive)
 	if err != nil {
 		return err
@@ -46,7 +46,7 @@ func Mount(rclone, unionFS, plexDrive MounterUnmounter) error {
 	return nil
 }
 
-func hasBrokenMounts(unionFS, rclone, plexDrive MounterUnmounter) (bool, error) {
+func hasBrokenMounts(unionFS, rclone, plexDrive FuseMount) (bool, error) {
 	isMountedUnionFS, err := unionFS.Mounted()
 	if err != nil {
 		return false, err
@@ -65,7 +65,7 @@ func hasBrokenMounts(unionFS, rclone, plexDrive MounterUnmounter) (bool, error) 
 	return !isMountedUnionFS || !isMountedRclone || !isMountedPlexDrive, nil
 }
 
-func remount(unionFS, rclone, plexDrive MounterUnmounter) error {
+func remount(unionFS, rclone, plexDrive FuseMount) error {
 	if err := unionFS.Unmount(); err != nil {
 		return err
 	}

@@ -1,6 +1,6 @@
 package cmd
 
-type MounterUnmounter interface {
+type FuseMount interface {
 	Mount() error
 	Unmount() error
 	Mounted() (bool, error)

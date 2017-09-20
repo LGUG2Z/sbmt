@@ -7,7 +7,8 @@ of Plexdrive, Rclone and UnionFS mounts on a seedbox and synchronise data betwee
 and cloud storage.
 
 This project takes heavy inspiration from work already done by [Mads Lundt](https://github.com/madslundt/docker-cloud-media-scripts)
-and all the contributors over at [hoarding.me](https://hoarding.me/).
+Jamie and all the contributors over at [hoarding.me](https://hoarding.me/) and the various
+scripts and tips I found posted on the [PlexACD subreddit](https://reddit.com/r/plexacd).
 
 With `sbmt` I am trying to hit the sweet spot between the approach of Dockerising everything
 and maintaining an array of bash scripts to enable the smooth running of a seedbox running
