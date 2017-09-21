@@ -11,7 +11,7 @@ import (
 var mountCmd = &cobra.Command{
 	Use:   "mount",
 	Short: "Set up and ensure integrity of Plexdrive, Rclone and UnionFS mounts",
-	Long:  MountLong,
+	Long:  mountLong,
 	Args:  cobra.NoArgs,
 	Run: func(cmd *cobra.Command, args []string) {
 		if !hasRequiredFlags(cmd, mountFlags) {
@@ -20,20 +20,22 @@ var mountCmd = &cobra.Command{
 		}
 
 		paths := Paths{
-			Decrypt:   mountFlags.DecryptFolder,
-			Mount:     mountFlags.DecryptRemote,
-			Local:     mountFlags.LocalFolder,
-			PlexDrive: mountFlags.PlexDriveFolder,
-			Union:     mountFlags.UnionFolder,
+			Decrypt:       mountFlags.DecryptFolder,
+			DecryptRemote: mountFlags.DecryptRemote,
+			Local:         mountFlags.LocalFolder,
+			PlexDrive:     mountFlags.PlexDriveFolder,
+			Union:         mountFlags.UnionFolder,
 		}
 
-		if err := Mount(Rclone{paths}, UnionFS{paths}, PlexDrive{paths}); err != nil {
+		if err := Mount(Rclone{paths}, UnionFS{paths}, Plexdrive{paths}); err != nil {
 			fmt.Println(err)
 			os.Exit(1)
 		}
 	},
 }
 
+// Mount verifies the integrity of a connected series of Plexdrive, Rclone and UnionFS mounts. If a mount is broken,
+// everything will be forcibly unmounted and remounted.
 func Mount(rclone, unionFS, plexDrive FuseMount) error {
 	hasBrokenMounts, err := hasBrokenMounts(unionFS, rclone, plexDrive)
 	if err != nil {
@@ -98,8 +100,6 @@ func remount(unionFS, rclone, plexDrive FuseMount) error {
 
 	return nil
 }
-
-type Printer struct{}
 
 var mountFlags Flags
 

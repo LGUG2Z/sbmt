@@ -48,7 +48,7 @@ var _ = Describe("Upload", func() {
 			_, err := fs.Create("/local/sub/a.txt")
 			Expect(err).ToNot(HaveOccurred())
 
-			_ = captureStdout(func() {
+			_, _ = captureStdout(func() {
 				Expect(Upload(fs, r, f)).To(Succeed())
 			})
 
@@ -61,7 +61,7 @@ var _ = Describe("Upload", func() {
 			_, err := fs.Create("/local/sub/b.txt")
 			Expect(err).ToNot(HaveOccurred())
 
-			_ = captureStdout(func() {
+			_, _ = captureStdout(func() {
 				Expect(Upload(fs, r, f)).To(Succeed())
 			})
 

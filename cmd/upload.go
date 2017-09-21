@@ -11,12 +11,11 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// uploadCmd represents the upload command
 var uploadCmd = &cobra.Command{
 	Use:   "upload",
 	Short: "Upload newly created files to an encrypted Rclone Google Drive remote",
 	Args:  cobra.NoArgs,
-	Long:  UploadLong,
+	Long:  uploadLong,
 	Run: func(cmd *cobra.Command, args []string) {
 		if !hasRequiredFlags(cmd, mountFlags) {
 			fmt.Println(ErrMissingRequiredFlags)
@@ -33,10 +32,15 @@ var uploadCmd = &cobra.Command{
 	},
 }
 
+// LocalRemoteMapping represents the location of a file on a local filesystem and the location it will be uploaded to
+// on an encrypted remote.
 type LocalRemoteMapping struct {
 	Source, Destination string
 }
 
+// Upload iterates through all files in the local read-write folder of a UnionFS mount and uploads each one to a
+// location determined by a LocalRemoteMapping on an encrypted remote. Once an upload is successfully completed the
+// original file is removed from the local filesystem.
 func Upload(fs afero.Fs, r RcloneDispatcher, f Flags) error {
 	if err := isRunning(); err != nil {
 		return err
@@ -45,6 +49,10 @@ func Upload(fs afero.Fs, r RcloneDispatcher, f Flags) error {
 	var localFiles []string
 
 	w := func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+
 		isDir, err := afero.IsDir(fs, path)
 		if err != nil {
 			return err
@@ -69,12 +77,13 @@ func Upload(fs afero.Fs, r RcloneDispatcher, f Flags) error {
 			return err
 		}
 
-		fmt.Printf(string(output))
+		fmt.Print(string(output))
 	}
 
 	return nil
 }
 
+// GetUploadMappings creates a list of LocalRemoteMapping objects for a list of file paths on a local filesystem.
 func GetUploadMappings(localFiles []string, localRoot, remoteMount string) []LocalRemoteMapping {
 	var uploadLocations []LocalRemoteMapping
 

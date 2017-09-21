@@ -1,11 +1,11 @@
 package cmd
 
 const (
-	RootLong = `The Seedbox Mount Tool (sbmt) is a single binary intended to help ensure the integrity
+	rootLong = `The Seedbox Mount Tool (sbmt) is a single binary intended to help ensure the integrity
 of Plexdrive, Rclone and UnionFS mounts on a seedbox and synchronise data between
 local and cloud storage.`
 
-	MountLong = `Mounts encrypted files stored on Google Drive using Plexdrive, Rclone and UnionFS.
+	mountLong = `Mounts encrypted files stored on Google Drive using Plexdrive, Rclone and UnionFS.
 
 The encrypted remote files on Google Drive are mounted by Plexdrive in the folder
 specified using the --plexdrive-folder flag. A local Rclone mount then reads the
@@ -40,7 +40,7 @@ sbmt mount \
 	--local-folder /local \
 	--union-folder /union
 `
-	CleanupLong = `Cleans up files that have been deleted on a UnionFS mount on an encrypted GDrive remote.
+	cleanupLong = `Cleans up files that have been deleted on a UnionFS mount on an encrypted GDrive remote.
 
 Files deleted from read-only section of a UnionFS mount are not actually deleted but
 rather hidden from view. A record of these hidden files is kept in a hidden subfolder of
@@ -54,7 +54,7 @@ sbmt cleanup \
 	--decrypt-folder /decrypt \
 	--union-folder /union
 `
-	UploadLong = `Uploads any newly created files to an encrypted Rclone remote.
+	uploadLong = `Uploads any newly created files to an encrypted Rclone remote.
 
 Files created in the read-write section of a UnionFS mount will be iterated over,
 encrypted, and uploaded to the Rclone remote specified using the --encrypt-remote

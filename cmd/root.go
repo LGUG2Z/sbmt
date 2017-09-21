@@ -7,6 +7,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// Flags represents all of the command line flags that can be passed to sbmt.
 type Flags struct {
 	DecryptFolder   string
 	DecryptRemote   string
@@ -20,7 +21,7 @@ type Flags struct {
 var RootCmd = &cobra.Command{
 	Use:   "sbmt",
 	Short: "Plexdrive, Rclone and UnionFS mount management made easier",
-	Long:  RootLong,
+	Long:  rootLong,
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.

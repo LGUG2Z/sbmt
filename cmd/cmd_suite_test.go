@@ -4,10 +4,10 @@ import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 
-	"testing"
-	"os"
 	"bytes"
 	"io"
+	"os"
+	"testing"
 )
 
 func TestCmd(t *testing.T) {
@@ -15,17 +15,25 @@ func TestCmd(t *testing.T) {
 	RunSpecs(t, "Cmd Suite")
 }
 
-func captureStdout(f func()) string {
+func captureStdout(f func()) (string, error) {
 	old := os.Stdout
 	r, w, _ := os.Pipe()
 	os.Stdout = w
 
 	f()
 
-	w.Close()
+	if err := w.Close(); err != nil {
+		return "", err
+	}
+
 	os.Stdout = old
 
 	var buf bytes.Buffer
-	io.Copy(&buf, r)
-	return buf.String()
+
+	_, err := io.Copy(&buf, r)
+	if err != nil {
+		return "", err
+	}
+
+	return buf.String(), nil
 }

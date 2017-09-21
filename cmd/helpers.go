@@ -5,19 +5,17 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// Paths represents all the paths and remotes required for mounting Plexdrive, decrypting with Rclone and presenting
+// a unified view with UnionFS. Paths are used directly by types implementing the FuseMount interface.
 type Paths struct {
 	Decrypt,
+	DecryptRemote,
 	Local,
-	Mount,
 	PlexDrive,
 	Union string
 }
 
-const (
-	RcloneCmd = "rclone"
-	MoveTo    = "moveto"
-)
-
+// RcloneDispatcher represents any object that is capable of executing a set of rclone commands.
 type RcloneDispatcher interface {
 	MoveTo(source, destination string) ([]byte, error)
 }

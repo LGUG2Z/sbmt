@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"fmt"
 	"os"
 	"os/exec"
 	"strings"
@@ -9,11 +8,13 @@ import (
 	"time"
 )
 
-type PlexDrive struct {
+// Plexdrive represents an interface to mount, unmount and verify a Plexdrive mount.
+type Plexdrive struct {
 	Paths Paths
 }
 
-func (plx PlexDrive) Mount() error {
+// Mount acts as a wrapper around the Plexdrive 'mount' command.
+func (plx Plexdrive) Mount() error {
 	command := exec.Command(
 		"plexdrive",
 		"mount",
@@ -46,7 +47,8 @@ func (plx PlexDrive) Mount() error {
 	return ErrCouldNotVerifyMount(plx.Paths.PlexDrive)
 }
 
-func (plx PlexDrive) Unmount() error {
+// Unmount checks if Plexdrive is currently mounted at a given path and unmounts it if it is.
+func (plx Plexdrive) Unmount() error {
 	isMounted, err := plx.Mounted()
 	if err != nil {
 		return err
@@ -61,11 +63,12 @@ func (plx PlexDrive) Unmount() error {
 	return nil
 }
 
-func (plx PlexDrive) Mounted() (bool, error) {
+// Mounted queries the mount status of Plexdrive mount at a given path.
+func (plx Plexdrive) Mounted() (bool, error) {
 	activeMounts, err := exec.Command("mount").CombinedOutput()
 	if err != nil {
 		return false, err
 	}
 
-	return strings.Contains(string(activeMounts), fmt.Sprintf("%s", plx.Paths.PlexDrive)), nil
+	return strings.Contains(string(activeMounts), plx.Paths.PlexDrive), nil
 }

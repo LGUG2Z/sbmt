@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"fmt"
 	"os"
 	"os/exec"
 	"strings"
@@ -9,12 +8,14 @@ import (
 	"time"
 )
 
+// Rclone represents an interface to mount, unmount and verify an Rclone mount.
 type Rclone struct {
 	Paths Paths
 }
 
+// MoveTo acts as a wrapper around rclone's 'moveto' command.
 func (r Rclone) MoveTo(source, destination string) ([]byte, error) {
-	command := exec.Command(RcloneCmd, MoveTo, source, destination, "--verbose")
+	command := exec.Command("rclone", "moveto", source, destination, "--verbose")
 	output, err := command.CombinedOutput()
 	if err != nil {
 		return []byte{}, err
@@ -23,6 +24,7 @@ func (r Rclone) MoveTo(source, destination string) ([]byte, error) {
 	return output, nil
 }
 
+// Mount acts as a wrapper around the rclone 'mount' command.
 func (r Rclone) Mount() error {
 	command := exec.Command(
 		"rclone",
@@ -32,7 +34,7 @@ func (r Rclone) Mount() error {
 		"2G",
 		"--dir-cache-time",
 		"1m0s",
-		r.Paths.Mount,
+		r.Paths.DecryptRemote,
 		r.Paths.Decrypt,
 	)
 
@@ -60,6 +62,7 @@ func (r Rclone) Mount() error {
 	return ErrCouldNotVerifyMount(r.Paths.Decrypt)
 }
 
+// Unmount checks if rclone is currently mounted at a given path and unmounts it if it is.
 func (r Rclone) Unmount() error {
 	isMounted, err := r.Mounted()
 	if err != nil {
@@ -75,11 +78,12 @@ func (r Rclone) Unmount() error {
 	return nil
 }
 
+// Mounted queries the mount status of an rclone mount at a given path.
 func (r Rclone) Mounted() (bool, error) {
 	activeMounts, err := exec.Command("mount").CombinedOutput()
 	if err != nil {
 		return false, err
 	}
 
-	return strings.Contains(string(activeMounts), fmt.Sprintf("%s", r.Paths.Decrypt)), nil
+	return strings.Contains(string(activeMounts), r.Paths.Decrypt), nil
 }

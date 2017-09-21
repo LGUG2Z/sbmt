@@ -161,7 +161,7 @@ var _ = Describe("Cleanup", func() {
 
 			Expect(UnionFsDelete(fs, f.UnionFolder, "/union/sub/a")).To(Succeed())
 
-			_ = captureStdout(func() {
+			_, _ = captureStdout(func() {
 				Expect(Cleanup(fs, f)).To(Succeed())
 			})
 
@@ -183,7 +183,7 @@ var _ = Describe("Cleanup", func() {
 
 			Expect(UnionFsDelete(fs, f.UnionFolder, "/union/a")).To(Succeed())
 
-			_ = captureStdout(func() {
+			_, _ = captureStdout(func() {
 				Expect(Cleanup(fs, f)).To(Succeed())
 			})
 
@@ -200,7 +200,7 @@ var _ = Describe("Cleanup", func() {
 
 			Expect(UnionFsDelete(fs, f.UnionFolder, "/union/a")).To(Succeed())
 
-			_ = captureStdout(func() {
+			_, _ = captureStdout(func() {
 				Expect(Cleanup(fs, f)).To(Succeed())
 			})
 
@@ -218,7 +218,7 @@ var _ = Describe("Cleanup", func() {
 
 				Expect(UnionFsDelete(fs, f.UnionFolder, "/union/sub/a")).To(Succeed())
 
-				_ = captureStdout(func() {
+				_, _ = captureStdout(func() {
 					Expect(Cleanup(fs, f)).To(Succeed())
 				})
 
@@ -237,7 +237,7 @@ var _ = Describe("Cleanup", func() {
 
 				Expect(UnionFsDelete(fs, f.UnionFolder, "/union/sub/a")).To(Succeed())
 
-				_ = captureStdout(func() {
+				_, _ = captureStdout(func() {
 					Expect(Cleanup(fs, f)).To(Succeed())
 				})
 

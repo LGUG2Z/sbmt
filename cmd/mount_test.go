@@ -9,11 +9,11 @@ import (
 
 var _ = Describe("Mount", func() {
 	p := Paths{
-		Decrypt:   "/decrypt",
-		Local:     "/local",
-		Mount:     "remote:",
-		PlexDrive: "/plexdrive",
-		Union:     "/union",
+		Decrypt:       "/decrypt",
+		Local:         "/local",
+		DecryptRemote: "remote:",
+		PlexDrive:     "/plexdrive",
+		Union:         "/union",
 	}
 
 	rclone := MockRclone{Paths: p}
@@ -26,9 +26,11 @@ var _ = Describe("Mount", func() {
 			rclone.IsMountedBool = true
 			unionFS.IsMountedBool = true
 
-			output := captureStdout(func() {
+			output, err := captureStdout(func() {
 				Expect(Mount(rclone, unionFS, plexDrive)).To(Succeed())
 			})
+
+			Expect(err).ToNot(HaveOccurred())
 
 			Expect(output).To(ContainSubstring("Broken mount detected. Remounting all."))
 		})
@@ -40,9 +42,11 @@ var _ = Describe("Mount", func() {
 			rclone.IsMountedBool = true
 			unionFS.IsMountedBool = true
 
-			output := captureStdout(func() {
+			output, err := captureStdout(func() {
 				Expect(Mount(rclone, unionFS, plexDrive)).To(Succeed())
 			})
+
+			Expect(err).ToNot(HaveOccurred())
 
 			Expect(output).ToNot(ContainSubstring("Broken mount detected. Remounting all."))
 		})
@@ -55,11 +59,13 @@ var _ = Describe("Mount", func() {
 			unionFS.IsMountedBool = false
 			rclone.MountError = ErrCouldNotVerifyMount(rclone.Paths.Decrypt)
 
-			_ = captureStdout(func() {
+			_, err := captureStdout(func() {
 				err := Mount(rclone, unionFS, plexDrive)
 				Expect(err).To(HaveOccurred())
 				Expect(err.Error()).To(Equal(rclone.MountError.Error()))
 			})
+
+			Expect(err).ToNot(HaveOccurred())
 		})
 	})
 })
