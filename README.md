@@ -1,3 +1,5 @@
+[![Go Report Card](https://goreportcard.com/badge/github.com/lgug2z/sbmt)](https://goreportcard.com/report/github.com/lgug2z/sbmt)
+
 # sbmt
 Plexdrive, Rclone and UnionFS mount management made easier.
 
