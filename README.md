@@ -8,7 +8,7 @@ The Seedbox Mount Tool (sbmt) is a single binary intended to help ensure the int
 of Plexdrive, Rclone and UnionFS mounts on a seedbox and synchronise data between local
 and cloud storage.
 
-This project takes heavy inspiration from work already done by [Mads Lundt](https://github.com/madslundt/docker-cloud-media-scripts)
+This project takes heavy inspiration from work already done by [Mads Lundt](https://github.com/madslundt/docker-cloud-media-scripts),
 Jamie and all the contributors over at [hoarding.me](https://hoarding.me/) and the various
 scripts and tips I found posted on the [PlexACD subreddit](https://reddit.com/r/plexacd).
 
@@ -66,7 +66,7 @@ the local machine, in a folder specified using the `--local` flag.
 
 The flow of data is as follows:
 
-GDrive (enc) -> Plexdrive Mount (enc) -> Rclone Mount (dec) -> UnionFS Mount (dec).
+GDrive (enc) -> Plexdrive (enc) -> Rclone (dec) -> UnionFS (dec).
 
 In order to show an unencrypted representation of the data mounted by Plexdrive,
 a separate Rclone remote will have to be created, in which the remote location
