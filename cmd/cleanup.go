@@ -17,7 +17,7 @@ var cleanupCmd = &cobra.Command{
 	Long:  cleanupLong,
 	Args:  cobra.NoArgs,
 	Run: func(cmd *cobra.Command, args []string) {
-		if !hasRequiredFlags(cmd, mountFlags) {
+		if !hasRequiredFlags(cmd, cleanupFlags) {
 			fmt.Println(ErrMissingRequiredFlags)
 			os.Exit(1)
 		}
@@ -74,17 +74,35 @@ func Cleanup(fs afero.Fs, f Flags) error {
 		fmt.Printf("%s cleaned up.\n", d)
 	}
 
-	emptyFolderPaths, err := getEmptyHiddenFolders(fs, unionDeletionsFolder)
-	if err != nil {
-		return err
+	for {
+		emptyFolderPaths, err := getEmptyHiddenFolders(fs, unionDeletionsFolder)
+		if err != nil {
+			return err
+		}
+
+		if len(emptyFolderPaths) == 0 {
+			break
+		}
+
+		for _, d := range emptyFolderPaths {
+			if e := cleanup(fs, d); e != nil {
+				return e
+			}
+			fmt.Printf("%s cleaned up.\n", d)
+		}
 	}
 
-	for _, d := range emptyFolderPaths {
-		if e := cleanup(fs, d); e != nil {
-			return e
-		}
-		fmt.Printf("%s cleaned up.\n", d)
-	}
+	//emptyFolderPaths, err := getEmptyHiddenFolders(fs, unionDeletionsFolder)
+	//if err != nil {
+	//	return err
+	//}
+	//
+	//for _, d := range emptyFolderPaths {
+	//	if e := cleanup(fs, d); e != nil {
+	//		return e
+	//	}
+	//	fmt.Printf("%s cleaned up.\n", d)
+	//}
 
 	isEmpty, err := afero.IsEmpty(fs, unionDeletionsFolder)
 	if err != nil {

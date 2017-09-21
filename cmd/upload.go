@@ -17,7 +17,7 @@ var uploadCmd = &cobra.Command{
 	Args:  cobra.NoArgs,
 	Long:  uploadLong,
 	Run: func(cmd *cobra.Command, args []string) {
-		if !hasRequiredFlags(cmd, mountFlags) {
+		if !hasRequiredFlags(cmd, uploadFlags) {
 			fmt.Println(ErrMissingRequiredFlags)
 			os.Exit(1)
 		}
