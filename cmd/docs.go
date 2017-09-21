@@ -18,7 +18,7 @@ the local machine, in a folder specified using the --local flag.
 
 The flow of data is as follows:
 
-GDrive (enc) -> Plexdrive Mount (enc) -> Rclone Mount (dec) -> UnionFS Mount (dec).
+GDrive (enc) -> Plexdrive (enc) -> Rclone (dec) -> UnionFS (dec).
 
 In order to show an unencrypted representation of the data mounted by Plexdrive,
 a separate Rclone remote will have to be created, in which the remote location
@@ -50,9 +50,7 @@ using the --decrypt flag and remove them from Google Drive.
 
 Example:
 
-sbmt cleanup \
-	--decrypt /decrypt \
-	--union /union
+sbmt cleanup --decrypt /decrypt --union /union
 `
 	uploadLong = `Uploads any newly created files to an encrypted Rclone remote.
 
@@ -66,8 +64,17 @@ soon as the upload is confirmed as having been successful.
 
 Example:
 
-sbmt upload \
-	--local /local \
-	--encrypt-remote encrypted-remote:
+sbmt upload --local /local --encrypt-remote encrypted-remote:
+`
+	unmountLong = `Unmounts any active UnionFS, Rclone and Plexdrive mounts at the specified locations.
+
+The mounts are unmounted in the following order to ensure that there are no problems
+with busy resources that prevent a successful unmounting operation:
+
+UnionFS -> Rclone -> Plexdrive
+
+Example:
+
+sbmt unmount --union /union --decrypt /decrypt --plexdrive /plexdrive
 `
 )

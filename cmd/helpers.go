@@ -11,7 +11,7 @@ type Paths struct {
 	Decrypt,
 	DecryptRemote,
 	Local,
-	PlexDrive,
+	Plexdrive,
 	Union string
 }
 
@@ -39,11 +39,17 @@ func isRunning() error {
 
 func hasRequiredFlags(cmd *cobra.Command, f Flags) bool {
 	if cmd.Use == "mount" {
-		return len(f.PlexDriveFolder) > 0 &&
+		return len(f.PlexdriveFolder) > 0 &&
 			len(f.LocalFolder) > 0 &&
 			len(f.UnionFolder) > 0 &&
 			len(f.DecryptFolder) > 0 &&
 			len(f.DecryptRemote) > 0
+	}
+
+	if cmd.Use == "unmount" {
+		return len(f.PlexdriveFolder) > 0 &&
+			len(f.UnionFolder) > 0 &&
+			len(f.DecryptFolder) > 0
 	}
 
 	if cmd.Use == "upload" {
@@ -56,4 +62,36 @@ func hasRequiredFlags(cmd *cobra.Command, f Flags) bool {
 	}
 
 	return false
+}
+
+func unmountAll(unionFS, rclone, plexdrive FuseMount) error {
+	if err := unionFS.Unmount(); err != nil {
+		return err
+	}
+
+	if err := rclone.Unmount(); err != nil {
+		return err
+	}
+
+	if err := plexdrive.Unmount(); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func mountAll(unionFS, rclone, plexdrive FuseMount) error {
+	if err := plexdrive.Mount(); err != nil {
+		return err
+	}
+
+	if err := rclone.Mount(); err != nil {
+		return err
+	}
+
+	if err := unionFS.Mount(); err != nil {
+		return err
+	}
+
+	return nil
 }

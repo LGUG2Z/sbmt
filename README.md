@@ -118,3 +118,15 @@ Example:
 ```bash
 sbmt upload --local /local --encrypt-remote encrypted-remote:
 ```
+
+### unmount
+
+The mounts are unmounted in the following order to ensure that there are no problems
+with busy resources that prevent a successful unmounting operation:
+
+UnionFS -> Rclone -> Plexdrive
+
+Example:
+```bash
+sbmt unmount --union /union --decrypt /decrypt --plexdrive /plexdrive
+```

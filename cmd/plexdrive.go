@@ -20,7 +20,7 @@ func (plx Plexdrive) Mount() error {
 		"mount",
 		"-o",
 		"allow_other",
-		plx.Paths.PlexDrive,
+		plx.Paths.Plexdrive,
 	)
 
 	command.Env = os.Environ()
@@ -44,7 +44,7 @@ func (plx Plexdrive) Mount() error {
 		}
 	}
 
-	return ErrCouldNotVerifyMount(plx.Paths.PlexDrive)
+	return ErrCouldNotVerifyMount(plx.Paths.Plexdrive)
 }
 
 // Unmount checks if Plexdrive is currently mounted at a given path and unmounts it if it is.
@@ -55,7 +55,7 @@ func (plx Plexdrive) Unmount() error {
 	}
 
 	if isMounted {
-		if err := syscall.Unmount(plx.Paths.PlexDrive, 0); err != nil {
+		if err := syscall.Unmount(plx.Paths.Plexdrive, 0); err != nil {
 			return err
 		}
 	}
@@ -70,5 +70,5 @@ func (plx Plexdrive) Mounted() (bool, error) {
 		return false, err
 	}
 
-	return strings.Contains(string(activeMounts), plx.Paths.PlexDrive), nil
+	return strings.Contains(string(activeMounts), plx.Paths.Plexdrive), nil
 }

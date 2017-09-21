@@ -25,7 +25,7 @@ type MockUnionFS struct {
 	IsMountedBool  bool
 }
 
-type MockPlexDrive struct {
+type MockPlexdrive struct {
 	Paths          Paths
 	MountError     error
 	UnmountError   error
@@ -33,7 +33,7 @@ type MockPlexDrive struct {
 	IsMountedBool  bool
 }
 
-func (plx MockPlexDrive) Mount() error {
+func (plx MockPlexdrive) Mount() error {
 	return plx.MountError
 }
 
@@ -45,7 +45,7 @@ func (f MockRclone) Mount() error {
 	return f.MountError
 }
 
-func (plx MockPlexDrive) Unmount() error {
+func (plx MockPlexdrive) Unmount() error {
 	return plx.UnmountError
 }
 
@@ -57,7 +57,7 @@ func (f MockRclone) Unmount() error {
 	return f.UnmountError
 }
 
-func (plx MockPlexDrive) Mounted() (bool, error) {
+func (plx MockPlexdrive) Mounted() (bool, error) {
 	return plx.IsMountedBool, plx.IsMountedError
 }
 

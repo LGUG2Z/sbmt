@@ -13,7 +13,7 @@ type Flags struct {
 	DecryptRemote   string
 	EncryptRemote   string
 	LocalFolder     string
-	PlexDriveFolder string
+	PlexdriveFolder string
 	UnionFolder     string
 }
 

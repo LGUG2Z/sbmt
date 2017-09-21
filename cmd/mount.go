@@ -23,7 +23,7 @@ var mountCmd = &cobra.Command{
 			Decrypt:       mountFlags.DecryptFolder,
 			DecryptRemote: mountFlags.DecryptRemote,
 			Local:         mountFlags.LocalFolder,
-			PlexDrive:     mountFlags.PlexDriveFolder,
+			Plexdrive:     mountFlags.PlexdriveFolder,
 			Union:         mountFlags.UnionFolder,
 		}
 
@@ -36,15 +36,19 @@ var mountCmd = &cobra.Command{
 
 // Mount verifies the integrity of a connected series of Plexdrive, Rclone and UnionFS mounts. If a mount is broken,
 // everything will be forcibly unmounted and remounted.
-func Mount(rclone, unionFS, plexDrive FuseMount) error {
-	hasBrokenMounts, err := hasBrokenMounts(unionFS, rclone, plexDrive)
+func Mount(rclone, unionFS, plexdrive FuseMount) error {
+	hasBrokenMounts, err := hasBrokenMounts(unionFS, rclone, plexdrive)
 	if err != nil {
 		return err
 	}
 
 	if hasBrokenMounts {
 		fmt.Println("Broken mount detected. Remounting all.")
-		if err := remount(unionFS, rclone, plexDrive); err != nil {
+		if err := unmountAll(unionFS, rclone, plexdrive); err != nil {
+			return err
+		}
+
+		if err := mountAll(unionFS, rclone, plexdrive); err != nil {
 			return err
 		}
 	}
@@ -54,7 +58,8 @@ func Mount(rclone, unionFS, plexDrive FuseMount) error {
 	return nil
 }
 
-func hasBrokenMounts(unionFS, rclone, plexDrive FuseMount) (bool, error) {
+
+func hasBrokenMounts(unionFS, rclone, plexdrive FuseMount) (bool, error) {
 	isMountedUnionFS, err := unionFS.Mounted()
 	if err != nil {
 		return false, err
@@ -65,40 +70,12 @@ func hasBrokenMounts(unionFS, rclone, plexDrive FuseMount) (bool, error) {
 		return false, err
 	}
 
-	isMountedPlexDrive, err := plexDrive.Mounted()
+	isMountedPlexdrive, err := plexdrive.Mounted()
 	if err != nil {
 		return false, err
 	}
 
-	return !isMountedUnionFS || !isMountedRclone || !isMountedPlexDrive, nil
-}
-
-func remount(unionFS, rclone, plexDrive FuseMount) error {
-	if err := unionFS.Unmount(); err != nil {
-		return err
-	}
-
-	if err := rclone.Unmount(); err != nil {
-		return err
-	}
-
-	if err := plexDrive.Unmount(); err != nil {
-		return err
-	}
-
-	if err := plexDrive.Mount(); err != nil {
-		return err
-	}
-
-	if err := rclone.Mount(); err != nil {
-		return err
-	}
-
-	if err := unionFS.Mount(); err != nil {
-		return err
-	}
-
-	return nil
+	return !isMountedUnionFS || !isMountedRclone || !isMountedPlexdrive, nil
 }
 
 var mountFlags Flags
@@ -106,7 +83,7 @@ var mountFlags Flags
 func init() {
 	RootCmd.AddCommand(mountCmd)
 	mountCmd.Flags().StringVar(&mountFlags.UnionFolder, "union", "", "location of the unionfs mount folder")
-	mountCmd.Flags().StringVar(&mountFlags.PlexDriveFolder, "plexdrive", "", "location of the plexdrive mount folder")
+	mountCmd.Flags().StringVar(&mountFlags.PlexdriveFolder, "plexdrive", "", "location of the plexdrive mount folder")
 	mountCmd.Flags().StringVar(&mountFlags.LocalFolder, "local", "", "location of the local folder (union read-write)")
 	mountCmd.Flags().StringVar(&mountFlags.DecryptFolder, "decrypt", "", "location of the decrypted plexdrive folder (union read-only)")
 	mountCmd.Flags().StringVar(&mountFlags.DecryptRemote, "decrypt-remote", "", "name of the remote to use to decrypt data from plexdrive (with ':' suffix)")

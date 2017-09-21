@@ -12,22 +12,22 @@ var _ = Describe("Mount", func() {
 		Decrypt:       "/decrypt",
 		Local:         "/local",
 		DecryptRemote: "remote:",
-		PlexDrive:     "/plexdrive",
+		Plexdrive:     "/plexdrive",
 		Union:         "/union",
 	}
 
 	rclone := MockRclone{Paths: p}
 	unionFS := MockUnionFS{Paths: p}
-	plexDrive := MockPlexDrive{Paths: p}
+	plexdrive := MockPlexdrive{Paths: p}
 
 	Describe("If any one mount is not active", func() {
 		It("Should try to unmount all mounts before mounting them all again", func() {
-			plexDrive.IsMountedBool = false
+			plexdrive.IsMountedBool = false
 			rclone.IsMountedBool = true
 			unionFS.IsMountedBool = true
 
 			output, err := captureStdout(func() {
-				Expect(Mount(rclone, unionFS, plexDrive)).To(Succeed())
+				Expect(Mount(rclone, unionFS, plexdrive)).To(Succeed())
 			})
 
 			Expect(err).ToNot(HaveOccurred())
@@ -38,12 +38,12 @@ var _ = Describe("Mount", func() {
 
 	Describe("If all mounts are not active", func() {
 		It("Should not take any action", func() {
-			plexDrive.IsMountedBool = true
+			plexdrive.IsMountedBool = true
 			rclone.IsMountedBool = true
 			unionFS.IsMountedBool = true
 
 			output, err := captureStdout(func() {
-				Expect(Mount(rclone, unionFS, plexDrive)).To(Succeed())
+				Expect(Mount(rclone, unionFS, plexdrive)).To(Succeed())
 			})
 
 			Expect(err).ToNot(HaveOccurred())
@@ -54,13 +54,13 @@ var _ = Describe("Mount", func() {
 
 	Describe("If a remount cannot be verified", func() {
 		It("Should throw an error", func() {
-			plexDrive.IsMountedBool = true
+			plexdrive.IsMountedBool = true
 			rclone.IsMountedBool = true
 			unionFS.IsMountedBool = false
 			rclone.MountError = ErrCouldNotVerifyMount(rclone.Paths.Decrypt)
 
 			_, err := captureStdout(func() {
-				err := Mount(rclone, unionFS, plexDrive)
+				err := Mount(rclone, unionFS, plexdrive)
 				Expect(err).To(HaveOccurred())
 				Expect(err.Error()).To(Equal(rclone.MountError.Error()))
 			})
